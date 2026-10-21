@@ -1,0 +1,498 @@
+@import "tailwindcss";
+
+/*
+ * Monochrome palette. Dark is the default; `[data-theme="light"]` swaps it, and
+ * `.inverse` flips any component to the opposite palette (white-on-black cards
+ * in dark mode, black-on-white in light mode). "brand" is simply the strongest
+ * foreground tone.
+ */
+@theme {
+  --color-ink: #050505;
+  --color-canvas: #0a0a0a;
+  --color-surface: #121212;
+  --color-raised: #171717;
+  --color-line: #222222;
+  --color-line-strong: #2e2e2e;
+  --color-fg: #f5f5f5;
+  --color-soft: #d6d6d6;
+  --color-muted: #a3a3a3;
+  --color-faint: #8a8a8a;
+
+  --color-brand: #ffffff;
+  --color-brand-2: #c9c9c9;
+  --color-brand-soft: #e5e5e5;
+  --color-brand-deep: #8f8f8f;
+
+  --color-gold: #ffffff;
+  --color-silver: #a3a3a3;
+  --color-bronze: #6b6b6b;
+
+  --color-up: #1bd289;
+  --color-down: #f24237;
+
+  --animate-pulse-ring: pulse-ring 2s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+  --animate-rise: rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-fade: fade 0.6s ease-out both;
+  --animate-flash: flash 1.6s ease-out;
+}
+
+/* Light theme, and `.inverse` islands inside the dark theme. */
+:root[data-theme="light"],
+:root:not([data-theme="light"]) .inverse {
+  --color-ink: #ffffff;
+  --color-canvas: #fafafa;
+  --color-surface: #ffffff;
+  --color-raised: #f4f4f4;
+  --color-line: #e8e8e8;
+  --color-line-strong: #d4d4d4;
+  --color-fg: #0a0a0a;
+  --color-soft: #262626;
+  --color-muted: #525252;
+  --color-faint: #6b6b6b;
+  --color-brand: #0a0a0a;
+  --color-brand-2: #404040;
+  --color-brand-soft: #262626;
+  --color-brand-deep: #737373;
+  --color-gold: #0a0a0a;
+  --color-silver: #737373;
+  --color-bronze: #a3a3a3;
+  --color-up: #0e9f5f;
+  --color-down: #d92d20;
+  color-scheme: light;
+}
+
+/* `.inverse` islands inside the light theme. */
+:root[data-theme="light"] .inverse {
+  --color-ink: #050505;
+  --color-canvas: #0a0a0a;
+  --color-surface: #121212;
+  --color-raised: #1a1a1a;
+  --color-line: #262626;
+  --color-line-strong: #333333;
+  --color-fg: #f5f5f5;
+  --color-soft: #d6d6d6;
+  --color-muted: #a3a3a3;
+  --color-faint: #8a8a8a;
+  --color-brand: #ffffff;
+  --color-brand-2: #c9c9c9;
+  --color-brand-soft: #e5e5e5;
+  --color-brand-deep: #8f8f8f;
+  --color-gold: #ffffff;
+  --color-silver: #a3a3a3;
+  --color-bronze: #6b6b6b;
+  --color-up: #1bd289;
+  --color-down: #f24237;
+  color-scheme: dark;
+}
+
+.inverse {
+  background-color: var(--color-surface);
+  color: var(--color-fg);
+}
+
+/* Keyframes live outside @theme so they are always emitted (the sheet uses them from plain CSS). */
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.7; }
+  80%, 100% { transform: scale(2.6); opacity: 0; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes flash {
+  0% { background-color: color-mix(in srgb, var(--color-fg) 14%, transparent); }
+  100% { background-color: transparent; }
+}
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-fg);
+    font-feature-settings: "cv11", "ss01";
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-fg);
+    color: var(--color-ink);
+  }
+
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+}
+
+@layer components {
+  /* Card surface: tonal steps + hairline, the way SoDEX cards are built. */
+  .panel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 1rem;
+  }
+
+  .glass {
+    background: var(--color-canvas);
+    border: 1px solid var(--color-line);
+  }
+
+  .text-brand-gradient {
+    color: var(--color-muted);
+  }
+
+  .bg-brand-gradient {
+    background-color: var(--color-fg);
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .num {
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    letter-spacing: -0.01em;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Native <dialog> pop-up, centred. */
+  .sheet {
+    margin: auto;
+    width: min(52rem, calc(100vw - 2rem));
+    max-width: none;
+    max-height: calc(100dvh - 3rem);
+    padding: 0;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    overflow: visible;
+  }
+  .sheet[open] {
+    animation: pop-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  .sheet::backdrop {
+    background: rgb(0 0 0 / 0.6);
+    animation: fade 0.25s ease-out both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ───────── Builder Codes page ───────── */
+
+@layer components {
+  /* Chamfered spec-sheet card. Outer layer draws the hairline, inner the fill. */
+  .tactile {
+    --cut: 14px;
+    position: relative;
+    padding: 1px;
+    background: var(--color-line-strong);
+    clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut));
+    transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.35s ease;
+  }
+  .tactile-inner {
+    --tc-bg: var(--color-surface);
+    --tc-fg: var(--color-fg);
+    --ill-bg: var(--tc-bg);
+    background: var(--tc-bg);
+    color: var(--tc-fg);
+    clip-path: polygon(calc(var(--cut) - 0.5px) 0, calc(100% - var(--cut) + 0.5px) 0, 100% calc(var(--cut) - 0.5px), 100% calc(100% - var(--cut) + 0.5px), calc(100% - var(--cut) + 0.5px) 100%, calc(var(--cut) - 0.5px) 100%, 0 calc(100% - var(--cut) + 0.5px), 0 calc(var(--cut) - 0.5px));
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+  .tactile:hover,
+  .tactile:focus-visible {
+    background: var(--color-fg);
+  }
+  .tactile:hover .tactile-inner,
+  .tactile:focus-visible .tactile-inner {
+    --tc-bg: var(--color-fg);
+    --tc-fg: var(--color-ink);
+  }
+  .tc-muted {
+    color: color-mix(in srgb, var(--tc-fg) 66%, var(--tc-bg));
+    transition: color 0.35s ease;
+  }
+  .tc-faint {
+    color: color-mix(in srgb, var(--tc-fg) 50%, var(--tc-bg));
+    transition: color 0.35s ease;
+  }
+  .crop {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: color-mix(in srgb, var(--tc-fg) 55%, transparent);
+    transition: border-color 0.35s ease;
+  }
+  .crop-tl { top: 0; left: 0; border-top: 1px solid; border-left: 1px solid; }
+  .crop-tr { top: 0; right: 0; border-top: 1px solid; border-right: 1px solid; }
+  .crop-bl { bottom: 0; left: 0; border-bottom: 1px solid; border-left: 1px solid; }
+  .crop-br { bottom: 0; right: 0; border-bottom: 1px solid; border-right: 1px solid; }
+
+  /* Isometric line art */
+  .art {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .art-face {
+    fill: var(--ill-bg);
+    stroke: currentColor;
+    stroke-width: 1.1;
+    stroke-linejoin: round;
+    transition: fill 0.35s ease;
+  }
+  .art-line {
+    stroke: currentColor;
+    stroke-width: 1.1;
+    stroke-linecap: round;
+    opacity: 0.55;
+  }
+  .art-guide {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1;
+    stroke-dasharray: 1.5 4;
+    opacity: 0.4;
+  }
+  .art-dust circle {
+    fill: currentColor;
+    opacity: 0.4;
+  }
+  .art-dash {
+    stroke: currentColor;
+    stroke-width: 1;
+    stroke-dasharray: 3 3;
+  }
+  /* The one solid block in each drawing — always the card's foreground tone. */
+  .art-accent-top { fill: var(--tc-fg); stroke: var(--tc-fg); stroke-width: 0.8; stroke-linejoin: round; transition: fill 0.35s ease; }
+  .art-accent-side { fill: color-mix(in srgb, var(--tc-fg) 72%, var(--tc-bg)); stroke: var(--tc-fg); stroke-width: 0.8; stroke-linejoin: round; transition: fill 0.35s ease; }
+  .art-accent-dark { fill: color-mix(in srgb, var(--tc-fg) 45%, var(--tc-bg)); stroke: var(--tc-fg); stroke-width: 0.8; stroke-linejoin: round; transition: fill 0.35s ease; }
+  .art-glow {
+    display: none;
+  }
+  .art-check {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+    transition: stroke-dashoffset 0.45s ease 0.3s;
+  }
+  .art-ring {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.2;
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0.5);
+    transition: opacity 0.5s ease 0.25s, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.25s;
+  }
+  .art-press { transition: transform 0.6s cubic-bezier(0.34, 1.45, 0.5, 1); }
+  .art-slide { transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .art-pop { transition: transform 0.5s cubic-bezier(0.34, 1.6, 0.5, 1) 0.12s; }
+  .art-bar {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    transition: transform 0.55s cubic-bezier(0.34, 1.4, 0.5, 1);
+  }
+  .art-bounce { transition: transform 0.6s cubic-bezier(0.34, 1.6, 0.5, 1) 0.1s; }
+
+  .tactile:is(:hover, :focus-visible) .art-check { stroke-dashoffset: 0; }
+  .tactile:is(:hover, :focus-visible) .art-ring { opacity: 0.9; transform: scale(1); }
+  .tactile:is(:hover, :focus-visible) .art-press { transform: translateY(30px); }
+  .tactile:is(:hover, :focus-visible) .art-slide { transform: translate(18px, 10px); }
+  .tactile:is(:hover, :focus-visible) .art-pop { transform: translateY(-10px); }
+  .tactile:is(:hover, :focus-visible) .art-bar { transform: scaleY(1.14); }
+  .tactile:is(:hover, :focus-visible) .art-bounce { transform: translateY(-13px); }
+
+  /* Folders (flat, themed). Hover lifts the sheets and tips the front forward. */
+  .folder-obj {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 5 / 4;
+    perspective: 900px;
+  }
+  .folder-back {
+    position: absolute;
+    inset: 14% 4% 0 4%;
+    border-radius: 16px;
+    background: var(--f-back);
+  }
+  .folder-back::before {
+    content: "";
+    position: absolute;
+    top: -9%;
+    left: 0;
+    width: 40%;
+    height: 16%;
+    border-radius: 12px 12px 0 0;
+    background: var(--f-back);
+  }
+  .folder-sheet {
+    position: absolute;
+    left: 16%;
+    right: 16%;
+    top: 3%;
+    height: 62%;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--color-line-strong);
+    transition: transform 0.6s cubic-bezier(0.34, 1.3, 0.5, 1);
+  }
+  .folder-sheet-1 { background: var(--color-surface); color: var(--color-fg); transform: rotate(-7deg) translate(-9%, 4%); }
+  .folder-sheet-2 { background: var(--color-raised); color: var(--color-fg); transform: rotate(5deg) translate(10%, 2%); }
+  .folder-front {
+    position: absolute;
+    inset: 40% 0 0 0;
+    border-radius: 16px;
+    background: var(--f-front);
+    color: var(--f-front-fg);
+    border: 1px solid var(--f-front-line);
+    transform-origin: 50% 100%;
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .folder:is(:hover, :focus-visible) .folder-sheet-1 { transform: rotate(-11deg) translate(-14%, -12%); }
+  .folder:is(:hover, :focus-visible) .folder-sheet-2 { transform: rotate(9deg) translate(15%, -9%); }
+  .folder:is(:hover, :focus-visible) .folder-front { transform: rotateX(-16deg); }
+
+  .folder-solid {
+    --f-back: color-mix(in srgb, var(--color-fg) 70%, var(--color-ink));
+    --f-front: var(--color-fg);
+    --f-front-fg: var(--color-ink);
+    --f-front-line: var(--color-fg);
+  }
+  .folder-mid {
+    --f-back: color-mix(in srgb, var(--color-fg) 22%, var(--color-ink));
+    --f-front: color-mix(in srgb, var(--color-fg) 38%, var(--color-ink));
+    --f-front-fg: var(--color-fg);
+    --f-front-line: color-mix(in srgb, var(--color-fg) 45%, var(--color-ink));
+  }
+  .folder-outline {
+    --f-back: var(--color-raised);
+    --f-front: var(--color-surface);
+    --f-front-fg: var(--color-fg);
+    --f-front-line: var(--color-line-strong);
+  }
+
+  /* Range slider */
+  .range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 22px;
+    background: transparent;
+    cursor: pointer;
+    --fill: 0%;
+  }
+  .range::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 999px;
+    background: linear-gradient(var(--color-fg), var(--color-fg)) 0 / var(--fill) 100% no-repeat, var(--color-line-strong);
+  }
+  .range::-moz-range-track {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--color-line-strong);
+  }
+  .range::-moz-range-progress {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--color-fg);
+  }
+  .range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    margin-top: -7px;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--color-fg);
+    border: 0;
+    box-shadow: 0 0 0 3px var(--color-surface);
+    transition: box-shadow 0.2s;
+  }
+  .range::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--color-fg);
+    border: 0;
+    box-shadow: 0 0 0 3px var(--color-surface);
+  }
+  .range:focus-visible {
+    outline: none;
+  }
+  .range:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 3px var(--color-surface), 0 0 0 5px var(--color-fg);
+  }
+  .range:focus-visible::-moz-range-thumb {
+    box-shadow: 0 0 0 3px var(--color-surface), 0 0 0 5px var(--color-fg);
+  }
+
+  /* Code highlighting — one palette per theme so both stay readable. */
+  .tok-key { color: #ffb86c; }
+  .tok-str { color: #a5e075; }
+  .tok-num { color: #79b8ff; }
+  .tok-kw { color: #c792ea; }
+  .tok-com { color: var(--color-faint); font-style: italic; }
+  .tok-fn { color: #82aaff; }
+  :root[data-theme="light"] .tok-key { color: #b45309; }
+  :root[data-theme="light"] .tok-str { color: #15803d; }
+  :root[data-theme="light"] .tok-num { color: #1d4ed8; }
+  :root[data-theme="light"] .tok-kw { color: #7e22ce; }
+  :root[data-theme="light"] .tok-fn { color: #0369a1; }
+}
