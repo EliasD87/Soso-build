@@ -42,18 +42,15 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#050505" },
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-  ],
-  colorScheme: "dark light",
+  themeColor: "#ffffff",
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      data-theme="dark"
+      data-theme="light"
       suppressHydrationWarning
       className={`${inter.variable} ${spaceGrotesk.variable} ${plexMono.variable} h-full antialiased`}
     >
