@@ -1,6 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import type { ComponentType, MouseEvent, ReactNode, SVGProps } from "react";
-import { AkindoIcon, GitHubIcon, XIcon, YouTubeIcon } from "@/components/icons";
+import { GitHubIcon, XIcon } from "@/components/icons";
 import type { Project } from "@/data/projects";
 import { cn } from "@/lib/utils";
 import { youtubeId, youtubeWatchUrl } from "@/lib/youtube";
@@ -26,8 +26,6 @@ export function projectLinks(project: Project): LinkSpec[] {
       label: `${project.builder.name} on X`,
       icon: XIcon,
     },
-    { key: "video", href: videoUrl(project), label: `${project.name} demo video`, icon: YouTubeIcon },
-    { key: "akindo", href: project.links.akindo, label: `${project.name} on Akindo`, icon: AkindoIcon },
   ];
 }
 

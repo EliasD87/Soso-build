@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDown, ArrowUp, ArrowUpRight, ChevronDown, Search, X } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpRight, ChevronDown, ChevronRight, Search, X } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { type ReactNode, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatedNumber } from "@/components/animated-number";
@@ -387,9 +387,22 @@ function Row({
           </span>
         </td>
 
-        <td className="hidden w-36 pr-6 lg:table-cell">
+        <td className="hidden w-44 pr-6 lg:table-cell">
           <div className="flex items-center justify-end gap-1">
             <LinkButtons project={project} />
+            {/* Fills in on row hover — the cue that the whole row opens the pop-up */}
+            <button
+              type="button"
+              tabIndex={-1}
+              onClick={(e) => {
+                e.stopPropagation();
+                open();
+              }}
+              className="ml-1 inline-flex h-7 items-center gap-0.5 rounded-full border border-line pr-2 pl-3 text-xs font-medium text-muted transition-colors group-hover:border-fg group-hover:bg-fg group-hover:text-canvas"
+            >
+              Details
+              <ChevronRight aria-hidden="true" className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+            </button>
           </div>
         </td>
       </motion.tr>
