@@ -20,19 +20,22 @@ export function TactileCard({
 }) {
   return (
     <article tabIndex={0} className={cn("tactile group outline-none", className)}>
-      <div className="tactile-inner flex h-full flex-col p-6 sm:p-7">
-        <header className="flex items-start justify-between gap-4">
-          <h3 className="font-display text-[1.375rem] leading-tight font-medium tracking-[-0.02em]">{title}</h3>
-          <span className="tc-faint pt-1.5 font-mono text-[0.625rem] tracking-widest">{index}</span>
-        </header>
-        <div className="relative mt-6 mb-5 px-3 py-4">
+      {/* Phones: compact row (art left, text right). From md: tall spec-sheet card. */}
+      <div className="tactile-inner flex h-full items-center gap-4 p-4 md:flex-col md:items-stretch md:gap-0 md:p-7">
+        <div className="relative w-24 shrink-0 px-1.5 py-2 md:order-2 md:mt-6 md:mb-5 md:w-auto md:px-3 md:py-4">
           <span aria-hidden="true" className="crop crop-tl" />
           <span aria-hidden="true" className="crop crop-tr" />
           <span aria-hidden="true" className="crop crop-bl" />
           <span aria-hidden="true" className="crop crop-br" />
           {art}
         </div>
-        {children && <div className="tc-muted mt-auto text-sm leading-relaxed">{children}</div>}
+        <div className="min-w-0 flex-1 md:contents">
+          <header className="flex items-start justify-between gap-3 md:order-1 md:gap-4">
+            <h3 className="font-display text-base leading-tight font-medium tracking-[-0.02em] md:text-[1.375rem]">{title}</h3>
+            <span className="tc-faint pt-0.5 font-mono text-[0.625rem] tracking-widest md:pt-1.5">{index}</span>
+          </header>
+          {children && <div className="tc-muted mt-1 text-sm leading-relaxed md:order-3 md:mt-auto">{children}</div>}
+        </div>
       </div>
     </article>
   );

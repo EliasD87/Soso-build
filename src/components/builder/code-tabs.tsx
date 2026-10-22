@@ -1,7 +1,6 @@
 "use client";
 
 import { Check, Copy } from "lucide-react";
-import { motion } from "motion/react";
 import { type ReactNode, useId, useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -83,13 +82,10 @@ export function CodeTabs({ snippets }: { snippets: Snippet[] }) {
                 onClick={() => setActive(s.key)}
                 className={cn(
                   "relative shrink-0 rounded-lg px-3 py-1.5 font-mono text-xs whitespace-nowrap transition-colors",
-                  selected ? "text-fg" : "text-faint hover:text-muted",
+                  selected ? "bg-fg/[0.07] text-fg" : "text-faint hover:text-muted",
                 )}
               >
-                {selected && (
-                  <motion.span layoutId={`${id}-tab`} className="absolute inset-0 rounded-lg bg-fg/[0.07]" transition={{ type: "spring", stiffness: 420, damping: 36 }} />
-                )}
-                <span className="relative">{s.label}</span>
+                {s.label}
               </button>
             );
           })}

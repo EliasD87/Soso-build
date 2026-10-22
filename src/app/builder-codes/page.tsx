@@ -127,7 +127,7 @@ export default function BuilderCodesPage() {
           {/* How it works */}
           <section id="how" aria-labelledby="how-title" className="mx-auto max-w-6xl px-4 pt-10 sm:px-6">
             <SectionHead title="How it works" id="how-title" />
-            <div className="mt-10 grid gap-4 md:grid-cols-3">
+            <div className="mt-10 grid gap-3 md:grid-cols-3 md:gap-4">
               <TactileCard index="001" title="Approve" art={<ApproveArt />}>
                 Users sign a max builder fee once.
               </TactileCard>

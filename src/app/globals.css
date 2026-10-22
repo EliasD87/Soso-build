@@ -107,6 +107,10 @@
   0% { background-color: color-mix(in srgb, var(--color-fg) 14%, transparent); }
   100% { background-color: transparent; }
 }
+@keyframes sheet-up {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
 @keyframes pop-in {
   from { opacity: 0; transform: translateY(12px) scale(0.97); }
   to { opacity: 1; transform: none; }
@@ -116,6 +120,7 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-space-grotesk), var(--font-inter), ui-sans-serif, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-race: var(--font-geist), var(--font-inter), ui-sans-serif, sans-serif;
 }
 
 @layer base {
@@ -214,6 +219,17 @@
   .sheet::backdrop {
     background: rgb(0 0 0 / 0.6);
     animation: fade 0.25s ease-out both;
+  }
+  /* Phones: a bottom sheet that rises from the edge. */
+  @media (max-width: 639px) {
+    .sheet {
+      margin: auto 0 0;
+      width: 100vw;
+      max-height: 92dvh;
+    }
+    .sheet[open] {
+      animation: sheet-up 0.38s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Inter, Space_Grotesk } from "next/font/google";
+import { Geist, IBM_Plex_Mono, Inter, Space_Grotesk } from "next/font/google";
 import { site } from "@/lib/site";
 import { themeScript } from "@/lib/theme";
 import "./globals.css";
@@ -13,6 +13,13 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+});
+
+// Ranks and project names on the leaderboard.
+const geist = Geist({
+  variable: "--font-geist",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
 });
 
 const plexMono = IBM_Plex_Mono({
@@ -52,7 +59,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       data-theme="light"
       suppressHydrationWarning
-      className={`${inter.variable} ${spaceGrotesk.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${geist.variable} ${plexMono.variable} h-full antialiased`}
     >
       <head>
         {/* Applies the saved/system theme before first paint, so there's no flash. */}

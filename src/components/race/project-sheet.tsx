@@ -1,9 +1,10 @@
 "use client";
 
-import { ArrowUpRight, Check, Link2, Play, X } from "lucide-react";
+import { ArrowUpRight, Check, Copy, Link2, Play, X } from "lucide-react";
+import { motion, useDragControls } from "motion/react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { AnimatedNumber } from "@/components/animated-number";
-import { XIcon } from "@/components/icons";
+import { DiscordIcon, TelegramIcon, XIcon } from "@/components/icons";
 import { UsdcIcon } from "@/components/icons-usdc";
 import { BuilderAvatar } from "@/components/marks";
 import { formatPercent, ordinal } from "@/lib/format";
@@ -79,23 +80,42 @@ function SheetBody({
   const { project, metrics, rank } = entry;
   const videoId = youtubeId(project.links.video);
   const share = metrics && totals.revenue > 0 ? metrics.revenue / totals.revenue : 0;
+  const dragControls = useDragControls();
 
   return (
-    <div className="relative flex max-h-[inherit] flex-col overflow-hidden rounded-2xl border border-line bg-canvas">
+    <motion.div
+      // Phones: drag the handle down to dismiss. Desktop never starts a drag (no handle).
+      drag="y"
+      dragListener={false}
+      dragControls={dragControls}
+      dragConstraints={{ top: 0, bottom: 0 }}
+      dragElastic={{ top: 0, bottom: 0.7 }}
+      onDragEnd={(_, info) => {
+        if (info.offset.y > 120 || info.velocity.y > 600) onClose();
+      }}
+      className="relative flex max-h-[inherit] flex-col overflow-hidden rounded-2xl border border-line bg-canvas max-sm:rounded-b-none max-sm:border-b-0"
+    >
+      <div
+        onPointerDown={(e) => dragControls.start(e)}
+        className="flex shrink-0 cursor-grab touch-none justify-center pt-3 pb-1 sm:hidden"
+        aria-hidden="true"
+      >
+        <span className="h-1.5 w-10 rounded-full bg-fg/20" />
+      </div>
       <button
         type="button"
         onClick={onClose}
         autoFocus
         aria-label="Close"
-        className="absolute top-5 right-5 z-10 grid size-8 place-items-center rounded-full text-muted transition hover:bg-fg/[0.06] hover:text-fg"
+        className="absolute top-4 right-4 z-10 grid size-8 sm:top-5 sm:right-5 place-items-center rounded-full text-muted transition hover:bg-fg/[0.06] hover:text-fg"
       >
         <X className="size-4" />
       </button>
 
-      <div className="no-scrollbar overflow-y-auto overscroll-contain p-6 sm:p-8">
+      <div className="no-scrollbar overflow-y-auto overscroll-contain px-5 pt-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:p-8">
         {/* Header */}
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 pr-10">
-          <h2 id="sheet-title" className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
+          <h2 id="sheet-title" className="font-race text-2xl font-semibold tracking-tight sm:text-3xl">
             {project.name}
           </h2>
           <span className="rounded-full border border-line px-2.5 py-0.5 text-xs text-muted">
@@ -151,8 +171,31 @@ function SheetBody({
                 {project.builder.name}
               </span>
               <TextLink href={`https://github.com/${project.builder.github}`}>GitHub</TextLink>
-              {project.builder.x && <TextLink href={`https://x.com/${project.builder.x}`}>@{project.builder.x}</TextLink>}
             </span>
+          </Row>
+          <Row label="Contact">
+            {project.team?.length ? (
+              <ul className="space-y-2.5">
+                {project.team.map((member, i) => (
+                  <li key={i} className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+                    {project.team!.length > 1 && <span className="w-full text-xs text-muted sm:w-auto">Member {i + 1}</span>}
+                    {member.x && (
+                      <ContactLink href={`https://x.com/${member.x}`} icon={<XIcon className="size-3.5" />}>
+                        @{member.x}
+                      </ContactLink>
+                    )}
+                    {member.telegram && (
+                      <ContactLink href={`https://t.me/${member.telegram}`} icon={<TelegramIcon className="size-4" />}>
+                        @{member.telegram}
+                      </ContactLink>
+                    )}
+                    {member.discord && <DiscordHandle handle={member.discord} />}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <span className="text-muted">Not shared yet</span>
+            )}
           </Row>
           <Row label="Links">
             <span className="flex flex-wrap gap-x-4 gap-y-1">
@@ -173,7 +216,7 @@ function SheetBody({
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -192,6 +235,48 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
       <dt className="text-muted">{label}</dt>
       <dd className="min-w-0">{children}</dd>
     </div>
+  );
+}
+
+function ContactLink({ href, icon, children }: { href: string; icon: ReactNode; children: ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1.5 text-fg underline decoration-line-strong underline-offset-4 transition hover:decoration-fg"
+    >
+      <span className="text-muted">{icon}</span>
+      {children}
+    </a>
+  );
+}
+
+/** Discord usernames have no public profile URL, so offer a copy instead. */
+function DiscordHandle({ handle }: { handle: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(handle);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        } catch {
+          /* clipboard blocked */
+        }
+      }}
+      aria-label={`Copy Discord username ${handle}`}
+      className="inline-flex items-center gap-1.5 text-fg transition hover:text-soft"
+    >
+      <DiscordIcon className="size-4 text-muted" />
+      {handle}
+      {copied ? <Check className="size-3.5 text-up" /> : <Copy className="size-3.5 text-faint" />}
+      <span role="status" className="sr-only">
+        {copied ? "Discord username copied" : ""}
+      </span>
+    </button>
   );
 }
 

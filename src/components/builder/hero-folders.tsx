@@ -4,7 +4,7 @@ import { Folder } from "./folder";
 
 function CodeSheet() {
   return (
-    <div className="p-3 font-mono text-[0.5625rem] leading-[1.55] sm:text-[0.625rem]">
+    <div className="p-2 font-mono text-[0.4375rem] leading-[1.55] sm:p-3 sm:text-[0.625rem]">
       <p className="opacity-50">{"// order.json"}</p>
       <p>{"{"}</p>
       <p className="pl-2">&quot;builder&quot;: {"{"}</p>
@@ -20,7 +20,7 @@ function BigSheet({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex h-full flex-col justify-between p-3">
       <span className="font-mono text-[0.5rem] tracking-widest uppercase opacity-50">{label}</span>
-      <span className="font-display text-3xl leading-none font-semibold tracking-tight sm:text-4xl">{value}</span>
+      <span className="font-display text-lg leading-none font-semibold tracking-tight sm:text-3xl md:text-4xl">{value}</span>
     </div>
   );
 }
@@ -30,7 +30,7 @@ function BitsSheet() {
     <div className="flex h-full flex-col justify-between p-3">
       <span className="font-mono text-[0.5rem] tracking-widest uppercase opacity-50">builderFeeData</span>
       <div>
-        <p className="font-display text-xl font-semibold tracking-tight sm:text-2xl">bytes32</p>
+        <p className="font-display text-sm font-semibold tracking-tight sm:text-xl md:text-2xl">bytes32</p>
         {/* 160 / 16 / 16 bit layout */}
         <div className="mt-2 flex h-2 gap-0.5 overflow-hidden rounded-full">
           <span className="flex-[160] bg-current" />
@@ -63,7 +63,7 @@ function Pill({ children }: { children: ReactNode }) {
 
 export function HeroFolders() {
   return (
-    <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 sm:mx-auto sm:grid sm:max-w-4xl sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:px-0 [&>*]:w-[72%] [&>*]:shrink-0 [&>*]:snap-center sm:[&>*]:w-auto">
+    <div className="mx-auto grid max-w-4xl grid-cols-3 gap-1 sm:gap-4">
       <Folder
         href={site.links.builderCodesDocs}
         external
@@ -72,7 +72,7 @@ export function HeroFolders() {
         meta="Account ID · paid in real time"
         sheets={[<CodeSheet key="a" />, <BigSheet key="b" value="0.2%" label="perps cap" />]}
         front={
-          <div className="flex h-full items-end justify-between p-3.5">
+          <div className="flex h-full items-end justify-between p-3.5 max-sm:hidden">
             <Pill>EIP-712</Pill>
             <Pill>spot 2%</Pill>
           </div>
@@ -86,7 +86,7 @@ export function HeroFolders() {
         meta="Address · charged at claim"
         sheets={[<BitsSheet key="a" />, <BigSheet key="b" value="2%" label="protocol max" />]}
         front={
-          <div className="relative flex h-full items-end justify-end p-3.5">
+          <div className="relative flex h-full items-end justify-end p-3.5 max-sm:hidden">
             {/* zipper detail, after the reference "Zipped" folder */}
             <span aria-hidden="true" className="absolute top-3 bottom-3 left-5 w-1.5 rounded-full bg-[repeating-linear-gradient(to_bottom,currentColor_0_2px,transparent_2px_5px)] opacity-30" />
             <span aria-hidden="true" className="absolute top-4 left-3.5 h-6 w-4 rounded-md border border-current/40 bg-current/15" />
@@ -101,7 +101,7 @@ export function HeroFolders() {
         meta="Live leaderboard · Wave 3"
         sheets={[<RankSheet key="a" />, <BigSheet key="b" value="#1" label="who's leading?" />]}
         front={
-          <div className="flex h-full items-end justify-between p-3.5">
+          <div className="flex h-full items-end justify-between p-3.5 max-sm:hidden">
             <Pill>25 builders</Pill>
             <Pill>Live · 30s</Pill>
           </div>

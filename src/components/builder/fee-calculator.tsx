@@ -74,7 +74,6 @@ export function FeeCalculator() {
         options={PRODUCT_OPTIONS}
         value={product}
         onChange={setProduct}
-        layoutId={`${id}-product`}
         className="h-10 bg-canvas"
       />
 

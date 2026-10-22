@@ -19,7 +19,7 @@ export function HowItWorks({ isPreview }: { isPreview: boolean }) {
         </Link>
       </div>
 
-      <div className="mt-8 grid gap-4 md:grid-cols-3">
+      <div className="mt-8 grid gap-3 md:grid-cols-3 md:gap-4">
         <TactileCard index="001" title="Ship a builder code" art={<AttachArt />}>
           Apps tag each order with their builder code.
         </TactileCard>

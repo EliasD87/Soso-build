@@ -122,6 +122,7 @@ export function LeaderboardApp({ initial, refreshSeconds }: { initial: Leaderboa
           onSelect={openProject}
           unavailable={Boolean(data.error)}
           animateLayout={animateLayout}
+          totalRevenue={data.totals.revenue}
         />
       </div>
       <ProjectSheet

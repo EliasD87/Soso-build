@@ -22,6 +22,13 @@ export type Category =
   | "Infrastructure"
   | "Education";
 
+/** How to reach a team member. Handles are stored without "@" or URL prefix. */
+export type Contact = {
+  x?: string;
+  telegram?: string;
+  discord?: string;
+};
+
 export type Builder = {
   /** Display name: developer or team name. */
   name: string;
@@ -42,6 +49,8 @@ export type Project = {
   /** SoDEX builder account ID, e.g. "123456". */
   builderId?: string;
   participating: boolean;
+  /** Team contacts shared with the organisers (one entry per member). */
+  team?: Contact[];
   links: {
     app: string;
     akindo: string;
@@ -70,8 +79,11 @@ export const projects: Project[] = [
     tagline: "Reads SoSoValue's market regime, builds an adaptive index, executes it on SoDEX.",
     waveRank: 1,
     categories: ALL,
-    builder: { name: "RaYYeR220", github: "RaYYeR220" },
+    builder: { name: "RaYYeR220", github: "RaYYeR220", x: "BazydloMis57623" },
     participating: true,
+    team: [
+      { x: "BazydloMis57623", telegram: "L0CEO", discord: "rayyer_220" },
+    ],
     links: {
       app: "https://bellwether-eight.vercel.app/",
       akindo: "https://app.akindo.io/communities/7m4QqGD0wcdQ8198z/products/OV2zvJXwDFP4Voav",
@@ -85,8 +97,11 @@ export const projects: Project[] = [
     tagline: "Launch your AI hedge fund in minutes. Describe your strategy, get live!",
     waveRank: 2,
     categories: ALL,
-    builder: { name: "DiablooDevs", github: "AhmedAmer72" },
+    builder: { name: "DiablooDevs", github: "AhmedAmer72", x: "DiablooDevs" },
     participating: true,
+    team: [
+      { x: "DiablooDevs", telegram: "DiablooDevs", discord: "DiablooDevs" },
+    ],
     links: {
       app: "https://thesis-x.vercel.app/",
       akindo: "https://app.akindo.io/communities/4e9BMWpMoHkjL2oo/products/jaMjlz0aoIQ8PW3n",
@@ -99,8 +114,11 @@ export const projects: Project[] = [
     tagline: "AI agent using SoSoValue data to write theses, rebalance SSI indices, and hedge on SoDEX.",
     waveRank: 3,
     categories: ALL,
-    builder: { name: "OoJae", github: "OoJae" },
+    builder: { name: "OoJae", github: "OoJae", x: "_OoJae" },
     participating: true,
+    team: [
+      { x: "_OoJae", telegram: "Oo_Jae", discord: "oojae_" },
+    ],
     links: {
       app: "https://sonar.my.id/",
       akindo: "https://app.akindo.io/communities/OVpl31QDoHmwQ9aD/products/nPM2EejL3C0oBnrDr",
@@ -114,8 +132,11 @@ export const projects: Project[] = [
     tagline: "Institutional ETF-flow scores for crypto — on a web dashboard and in Telegram.",
     waveRank: 4,
     categories: ALL,
-    builder: { name: "Prateek Tripathi", github: "Pratiikpy", x: "prateekhh" },
+    builder: { name: "Prateek Tripathi", github: "Pratiikpy", x: "Prateekhh" },
     participating: true,
+    team: [
+      { x: "Prateekhh", telegram: "Naki_sokaa0", discord: "zensotaka" },
+    ],
     links: {
       app: "https://pod-app-phi.vercel.app/",
       akindo: "https://app.akindo.io/communities/xKV2X6nR7c7KXNGL/products/WjMek47pjfknwlKd",
@@ -129,8 +150,11 @@ export const projects: Project[] = [
     tagline: "Event-driven alpha you can audit. Every signal traces back to the news.",
     waveRank: 5,
     categories: without("Risk & Alerts", "Social & Narratives"),
-    builder: { name: "Daily-Up", github: "Daily-Up" },
+    builder: { name: "Daily-Up", github: "Daily-Up", x: "JoeAshVS" },
     participating: true,
+    team: [
+      { x: "JoeAshVS", telegram: "daily1up", discord: "blackvs" },
+    ],
     links: {
       app: "https://helix-alpha-kappa.vercel.app/",
       akindo: "https://app.akindo.io/communities/o6Xpno8wZIkLD8Dd/products/JB1g9O7AxCQvWvng",
@@ -144,8 +168,11 @@ export const projects: Project[] = [
     tagline: "For crypto-native retail traders seeking structured exposure without tools, time, or quant skills.",
     waveRank: 6,
     categories: without("Social & Narratives"),
-    builder: { name: "ARGUS (j12s team)", github: "j12s-team" },
+    builder: { name: "ARGUS (j12s team)", github: "j12s-team", x: "cjanneh2000" },
     participating: true,
+    team: [
+      { x: "cjanneh2000", telegram: "janneh2000", discord: "janneh2000" },
+    ],
     links: {
       app: "https://mosaic-ivory.vercel.app/",
       akindo: "https://app.akindo.io/communities/274P0EngoflZW7R1/products/DreEvVOnptGRvdJz",
@@ -159,8 +186,11 @@ export const projects: Project[] = [
     tagline: "Agentic financial media + on-chain execution — real ETF flows → newsletter → copy-trade on SoDEX.",
     waveRank: 7,
     categories: [...ALL, "Education"],
-    builder: { name: "NeoCrafts", github: "NeoCrafts-cpu" },
+    builder: { name: "NeoCrafts", github: "NeoCrafts-cpu", x: "neocrafts" },
     participating: true,
+    team: [
+      { x: "neocrafts", telegram: "NeoCrafts77", discord: "neocrafts" },
+    ],
     links: {
       app: "https://bloom-ai-web-wheat.vercel.app/",
       akindo: "https://app.akindo.io/communities/kz6zqLNqJSd8PQB4D/products/X4MamkXXnTGwg20X",
@@ -175,6 +205,9 @@ export const projects: Project[] = [
     categories: ALL,
     builder: { name: "Emin Karagöz", github: "karagozemin", x: "kaptan_web3" },
     participating: true,
+    team: [
+      { x: "kaptan_web3", telegram: "kaptan_web3", discord: "kaptan_web3" },
+    ],
     links: {
       app: "https://upside-xi.vercel.app/",
       akindo: "https://app.akindo.io/communities/DreDaBDBACZK1KnpK/products/JB1X4J9e7S79VKJg",
@@ -188,8 +221,12 @@ export const projects: Project[] = [
     tagline: "Avoid bad crypto trades before execution with real-time risk scoring.",
     waveRank: 9,
     categories: without("Social & Narratives"),
-    builder: { name: "Emmy123222", github: "Emmy123222" },
+    builder: { name: "Emmy123222", github: "Emmy123222", x: "EmmanuelOg75160" },
     participating: true,
+    team: [
+      { x: "EmmanuelOg75160", telegram: "Ogheneovo123", discord: "manuel_12x" },
+      { x: "johnsdanlami", telegram: "johnsdanlami", discord: "johnsdanlami" },
+    ],
     links: {
       app: "https://trade-firewall-p7zn.vercel.app/",
       akindo: "https://app.akindo.io/communities/LavZG8X3Rt49K68N/products/jaMJmo4XDuOleOZL",
@@ -202,8 +239,11 @@ export const projects: Project[] = [
     tagline: "Watches SoSoValue's sector, index, and ETF-flow data for rotation before it's priced in.",
     waveRank: 10,
     categories: without("Wallet Tracking", "Social & Narratives"),
-    builder: { name: "Euphoria-p", github: "Euphoria-p" },
+    builder: { name: "Euphoria-p", github: "Euphoria-p", x: "KingsleyCaesar1" },
     participating: true,
+    team: [
+      { x: "KingsleyCaesar1", telegram: "TZARblue", discord: "caesar581" },
+    ],
     links: {
       app: "https://sector-pulse-inky.vercel.app/",
       akindo: "https://app.akindo.io/communities/K8E6MleeRUQOV2gKd/products/GL9d1A8AOHonL94gD",
@@ -217,8 +257,11 @@ export const projects: Project[] = [
     tagline: "Autonomous on-chain research agency.",
     waveRank: 11,
     categories: [...without("Risk & Alerts", "Social & Narratives"), "Education"],
-    builder: { name: "fourWayz", github: "fourWayz" },
+    builder: { name: "fourWayz", github: "fourWayz", x: "0xSpectreSec" },
     participating: true,
+    team: [
+      { x: "0xSpectreSec", discord: "fourways_" },
+    ],
     links: {
       app: "https://soso-analyst.vercel.app/",
       akindo: "https://app.akindo.io/communities/Z4Rpzpe4PC7262K6Q/products/DreGPgkV3iEn9RQl",
@@ -294,6 +337,9 @@ export const projects: Project[] = [
     categories: without("Social & Narratives"),
     builder: { name: "Ritik Pandey", github: "Ritik200238", x: "ritik_pandey999" },
     participating: true,
+    team: [
+      { x: "ritik_pandey999", telegram: "ritik_p2002", discord: "ritikp_2002" },
+    ],
     links: {
       app: "https://basisdesk.vercel.app/",
       akindo: "https://app.akindo.io/communities/Vw2gPZdQaTDOKZKg/products/lrM6DVdMzTDjZZom",
@@ -323,6 +369,9 @@ export const projects: Project[] = [
     categories: without("ETFs & Indices", "Social & Narratives"),
     builder: { name: "Kiter", github: "PhiBao", x: "0xKiter" },
     participating: true,
+    team: [
+      { x: "0xKiter", telegram: "kiter9", discord: "kiter99" },
+    ],
     links: {
       app: "https://so-vibe.vercel.app/",
       akindo: "https://app.akindo.io/communities/1PrjMj61aiJnq8mJ/products/4e4Pg0MZzf2XzLOjX",
@@ -336,8 +385,11 @@ export const projects: Project[] = [
     tagline: "Live ETF flows → Claude AI signal → SoDEX trade. Connect wallet to start.",
     waveRank: 19,
     categories: without("Social & Narratives"),
-    builder: { name: "Girum", github: "girume1" },
+    builder: { name: "Girum", github: "girume1", x: "theinvisivle" },
     participating: true,
+    team: [
+      { x: "theinvisivle", telegram: "Gir1st", discord: "mrgt_07" },
+    ],
     links: {
       app: "https://etfsignal.vercel.app/",
       akindo: "https://app.akindo.io/communities/jan7NaMR3hgV7EzP/products/0nZk8nGgjCQg2Q1K",
@@ -351,8 +403,11 @@ export const projects: Project[] = [
     tagline: "Dynamic Risk-Informed Futures Trading.",
     waveRank: 20,
     categories: ["Trading Agents", "Risk & Alerts", "Market Data", "ETFs & Indices", "Wallet Tracking"],
-    builder: { name: "Giang Le", github: "lthuangiang", x: "lthuangiang" },
+    builder: { name: "Giang Le", github: "lthuangiang", x: "junxcrypto" },
     participating: true,
+    team: [
+      { x: "junxcrypto", discord: "junxcrypto" },
+    ],
     links: {
       app: "https://drift.junxcrypto.xyz/",
       akindo: "https://app.akindo.io/communities/rgV1Wlz4lT89vpKo/products/q3Gg44ZoLIwWKaO2",
@@ -381,8 +436,11 @@ export const projects: Project[] = [
     tagline: "Pre-trade policy gateway for autonomous SoDEX agents.",
     waveRank: 22,
     categories: without("Social & Narratives"),
-    builder: { name: "ShalyX", github: "ShalyX" },
+    builder: { name: "ShalyX", github: "ShalyX", x: "shalyx_04" },
     participating: true,
+    team: [
+      { x: "shalyx_04", telegram: "shaly00", discord: "shalyx" },
+    ],
     links: {
       app: "https://policyguard-nine.vercel.app/",
       akindo: "https://app.akindo.io/communities/o6Xgma29Vun4VWEE/products/d8MDdxlmPSPBo764",
@@ -413,6 +471,9 @@ export const projects: Project[] = [
     categories: ["Trading Agents", "Market Data"],
     builder: { name: "Abdulsalam Hassan", github: "Turnless", x: "turnless_HQ" },
     participating: true,
+    team: [
+      { x: "turnless_HQ", telegram: "turnlessHQ", discord: "turnless" },
+    ],
     links: {
       app: "https://cinderhq.vercel.app/",
       akindo: "https://app.akindo.io/communities/JB1PM8ralCKzrzqV/products/ENOnWN98KtzgE64oL",
