@@ -34,38 +34,33 @@ export function StatusPill({
   if (source === "preview" && !error) return null;
   const state = error ? "error" : reconnecting ? "reconnecting" : "live";
   const tone = {
-    live: { dot: "bg-up", ring: "bg-up/60", label: "Live" },
-    error: { dot: "bg-down", ring: "bg-down/60", label: "Live" },
-    reconnecting: { dot: "bg-muted", ring: "bg-muted/50", label: "Reconnecting" },
+    live: { dot: "bg-up", ring: "bg-up/60" },
+    error: { dot: "bg-down", ring: "bg-down/60" },
+    reconnecting: { dot: "bg-muted", ring: "bg-muted/50" },
   }[state];
 
   const detail =
     state === "error"
       ? hasData
-        ? "showing last data"
-        : "data unavailable"
-      : ago
-          ? `updated ${ago}`
-          : "connected";
+        ? "Showing last data"
+        : "Data unavailable"
+      : state === "reconnecting"
+        ? "Reconnecting"
+        : ago
+          ? `Updated ${ago}`
+          : "Connected";
 
   return (
     <>
       {/* The visible pill ticks every second, so it is not a live region. */}
-      <span
-        className={cn(
-          "glass inline-flex items-center gap-2.5 rounded-full py-1.5 pr-3.5 pl-3 text-xs text-soft",
-          className,
-        )}
-      >
+      <span className={cn("inline-flex items-center gap-2 text-xs whitespace-nowrap text-muted", className)}>
         <span className="relative flex size-2" aria-hidden="true">
           {state !== "error" && (
             <span className={cn("absolute inset-0 animate-pulse-ring rounded-full", tone.ring)} />
           )}
           <span className={cn("relative size-2 rounded-full", tone.dot)} />
         </span>
-        <span className="font-medium text-fg">{tone.label}</span>
-        <span className="h-3 w-px bg-fg/15" aria-hidden="true" />
-        <span className="text-muted">{detail}</span>
+        {detail}
       </span>
       <span role="status" className="sr-only">
         {ANNOUNCE[state]}

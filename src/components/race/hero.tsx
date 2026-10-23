@@ -35,27 +35,30 @@ export function Hero({
 
       <div className="relative mx-auto max-w-6xl px-4 pt-32 pb-12 sm:px-6 sm:pt-40 sm:pb-16">
         <div className="flex animate-rise flex-wrap items-center gap-2.5">
-          <Segmented
-            label="Data source"
-            options={SOURCE_OPTIONS}
-            value={source}
-            onChange={onSourceChange}
-            className="h-9"
-            itemClassName="px-3.5 text-xs"
-          />
-          <StatusPill
-            source={data.source}
-            updatedAt={data.updatedAt}
-            error={data.error}
-            reconnecting={reconnecting}
-            hasData={totals.active > 0}
-          />
           <span className="inline-flex items-center gap-2.5 rounded-full border border-line bg-canvas py-1.5 pr-3 pl-3.5 text-fg">
             <SoSoValueLogo className="h-4 w-auto" />
             <span className="h-3 w-px bg-line-strong" aria-hidden="true" />
             <span className="font-display text-sm font-medium tracking-tight text-soft">Buildathon · Wave 3</span>
           </span>
           <Countdown />
+          {/* Toggle and its status wrap together, so phones get them on one line */}
+          <span className="flex items-center gap-3">
+            <Segmented
+              label="Data source"
+              options={SOURCE_OPTIONS}
+              value={source}
+              onChange={onSourceChange}
+              className="h-9"
+              itemClassName="px-3.5 text-xs"
+            />
+            <StatusPill
+              source={data.source}
+              updatedAt={data.updatedAt}
+              error={data.error}
+              reconnecting={reconnecting}
+              hasData={totals.active > 0}
+            />
+          </span>
         </div>
 
         <h1 className="mt-8 animate-rise font-display text-[clamp(3.5rem,12vw,8.5rem)] leading-[0.88] font-semibold tracking-[-0.05em] [animation-delay:80ms]">
