@@ -1,12 +1,29 @@
 "use client";
 
+import type { MetricsSource } from "@/lib/metrics/types";
 import type { Leaderboard } from "@/lib/ranking";
+import { Segmented } from "@/components/segmented";
 import { SoSoValueLogo } from "@/components/sosovalue-logo";
 import { BuilderField } from "./builder-field";
 import { Countdown } from "./countdown";
 import { StatusPill } from "./status-pill";
 
-export function Hero({ data, reconnecting }: { data: Leaderboard; reconnecting: boolean }) {
+const SOURCE_OPTIONS = [
+  { key: "preview", label: "Prototype" },
+  { key: "live", label: "Live" },
+] as const;
+
+export function Hero({
+  data,
+  reconnecting,
+  source,
+  onSourceChange,
+}: {
+  data: Leaderboard;
+  reconnecting: boolean;
+  source: MetricsSource;
+  onSourceChange: (source: MetricsSource) => void;
+}) {
   const { totals } = data;
 
   return (
@@ -18,6 +35,14 @@ export function Hero({ data, reconnecting }: { data: Leaderboard; reconnecting: 
 
       <div className="relative mx-auto max-w-6xl px-4 pt-32 pb-12 sm:px-6 sm:pt-40 sm:pb-16">
         <div className="flex animate-rise flex-wrap items-center gap-2.5">
+          <Segmented
+            label="Data source"
+            options={SOURCE_OPTIONS}
+            value={source}
+            onChange={onSourceChange}
+            className="h-9"
+            itemClassName="px-3.5 text-xs"
+          />
           <StatusPill
             source={data.source}
             updatedAt={data.updatedAt}
@@ -36,6 +61,12 @@ export function Hero({ data, reconnecting }: { data: Leaderboard; reconnecting: 
         <h1 className="mt-8 animate-rise font-display text-[clamp(3.5rem,12vw,8.5rem)] leading-[0.88] font-semibold tracking-[-0.05em] [animation-delay:80ms]">
           Builder Race
         </h1>
+
+        {data.source === "live" && !data.error && totals.active === 0 && (
+          <p className="mt-6 w-fit animate-rise rounded-full border border-line bg-canvas px-3.5 py-1.5 text-xs text-muted">
+            Live is connected. No builder codes are linked yet.
+          </p>
+        )}
 
         {data.error && (
           <p className="mt-6 w-fit animate-rise rounded-full border border-down/40 bg-canvas px-3.5 py-1.5 text-xs text-down">

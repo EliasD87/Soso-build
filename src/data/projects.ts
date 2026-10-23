@@ -5,10 +5,11 @@
  * part in the Builder Race — set `participating: false` to hide a project from
  * the leaderboard without deleting its record.
  *
- * `builderId` is the project's SoDEX builder ID — the numeric trading account
- * ID that users approve a builder fee for (see SoDEX "Builder Codes in
- * Trading"). Fill it in once teams share their codes; in live mode, projects
- * without one are listed as "awaiting builder code".
+ * `builderAddress` is the wallet that owns the project's SoDEX builder
+ * account — live stats are queried by it (SoDEX "Builder statistics").
+ * `builderId` (the numeric builder account ID) is only needed when the builder
+ * is not the wallet's primary account. In live mode, projects without an
+ * address are listed as "awaiting builder code".
  */
 
 export type Category =
@@ -46,7 +47,9 @@ export type Project = {
   waveRank: number;
   categories: Category[];
   builder: Builder;
-  /** SoDEX builder account ID, e.g. "123456". */
+  /** Wallet that owns the SoDEX builder account, e.g. "0x12…ab". */
+  builderAddress?: string;
+  /** SoDEX builder account ID, e.g. "123456" — only if not the wallet's primary account. */
   builderId?: string;
   participating: boolean;
   /** Team contacts shared with the organisers (one entry per member). */

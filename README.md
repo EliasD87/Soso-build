@@ -11,15 +11,17 @@ npm install
 npm run dev        # http://localhost:3000
 ```
 
-Without any env vars the site runs in **preview mode**: deterministic sample numbers that slowly grow over time so the live behaviour (re-ranking, ticking totals) can be demoed. The UI does not label sample data, so avoid sharing the site publicly before going live; the OG image and share text never show sample rankings.
+The site opens in **Prototype** mode: deterministic sample numbers that slowly grow over time so the live behaviour (re-ranking, ticking totals) can be demoed. A **Prototype / Live** toggle in the hero switches the board between sample data and real SoDEX stats (`?data=live` deep-links to Live). Set `METRICS_MODE=live` to open in Live by default.
 
-## Going live with the Builder Codes API
+## Live data: SoDEX builder statistics
 
-1. Add each team's SoDEX builder ID to `src/data/projects.ts` (`builderId: "123456"`). This is the numeric SoDEX account ID users approve a builder fee for.
-2. Set `BUILDER_CODES_API_URL` (and `BUILDER_CODES_API_KEY` if needed) — see `.env.example`.
-3. Check the field mapping in `src/lib/metrics/builder-codes.ts`. The adapter accepts a bare array or `{ data: [...] }`-style envelopes and reads fields through alias lists (`builderID`, `authorizedUsers`, `builderRevenue`, `volume`, …). Once the API docs are published, trim the aliases to the real names.
+Live mode uses the public SoDEX endpoint `GET /api/v1/user/{builderAddress}/builder/summary` (no key needed), which returns each builder's cumulative fees, user count and traded volume across Spot and Perps.
 
-In live mode a failed API call shows "Live data unavailable" — it never falls back to sample numbers. Projects without a `builderId` are listed unranked as "Awaiting code".
+1. Add each team's builder wallet to `src/data/projects.ts` (`builderAddress: "0x…"`). That is the wallet that owns the builder trading account.
+2. If the builder is not that wallet's primary account, also set `builderId` (the numeric account ID).
+3. Optional: point `SODEX_API_URL` at Testnet (see `.env.example`).
+
+In live mode a failed API call shows "Live data unavailable" — it never falls back to sample numbers. Projects without a `builderAddress` are listed unranked as "Awaiting code"; linked builders with no activity yet show 0.
 
 ### Refresh model
 

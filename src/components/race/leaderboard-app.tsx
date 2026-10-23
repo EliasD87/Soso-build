@@ -1,9 +1,11 @@
 "use client";
 
 import { MotionConfig } from "motion/react";
-import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import type { MetricsSource } from "@/lib/metrics/types";
 import { type Leaderboard, rankEntries, type SortKey } from "@/lib/ranking";
 import { setQueryParams, useQueryParam } from "@/lib/url-state";
+import { cn } from "@/lib/utils";
 import { Hero } from "./hero";
 import { ProjectSheet } from "./project-sheet";
 import { type Changed, type Movement, Standings } from "./standings";
@@ -41,8 +43,15 @@ export function LeaderboardApp({ initial, refreshSeconds }: { initial: Leaderboa
   const sortParam = useQueryParam("sort");
   const sort: SortKey = sortParam === "users" ? "users" : "revenue";
   const selectedSlug = useQueryParam("project");
+  // Prototype / Live toggle; the server's default applies until it is used.
+  const dataParam = useQueryParam("data");
+  const source: MetricsSource = dataParam === "live" ? "live" : dataParam === "prototype" ? "preview" : initial.source;
+  // True between flipping the toggle and the new source's first response.
+  const switching = state.data.source !== source;
 
-  // Poll the cached API route; pause while the tab is hidden.
+  // Poll the cached API route; pause while the tab is hidden. Changing the
+  // source restarts polling with an immediate fetch.
+  const firstRun = useRef(true);
   useEffect(() => {
     let cancelled = false;
     let inFlight = false;
@@ -51,7 +60,7 @@ export function LeaderboardApp({ initial, refreshSeconds }: { initial: Leaderboa
       if (inFlight || document.visibilityState !== "visible") return;
       inFlight = true;
       try {
-        const res = await fetch("/api/leaderboard", { cache: "no-store" });
+        const res = await fetch(`/api/leaderboard?source=${source}`, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const next = (await res.json()) as Leaderboard;
         if (cancelled) return;
@@ -64,6 +73,8 @@ export function LeaderboardApp({ initial, refreshSeconds }: { initial: Leaderboa
       }
     }
 
+    if (!firstRun.current || source !== initial.source) refresh();
+    firstRun.current = false;
     const id = setInterval(refresh, refreshSeconds * 1000);
     const onVisible = () => {
       if (document.visibilityState === "visible") refresh();
@@ -74,7 +85,7 @@ export function LeaderboardApp({ initial, refreshSeconds }: { initial: Leaderboa
       clearInterval(id);
       document.removeEventListener("visibilitychange", onVisible);
     };
-  }, [refreshSeconds]);
+  }, [refreshSeconds, source, initial.source]);
 
   const { data } = state;
   const isPreview = data.source === "preview";
@@ -94,6 +105,10 @@ export function LeaderboardApp({ initial, refreshSeconds }: { initial: Leaderboa
     setQueryParams({ sort: next === "revenue" ? null : next });
   }, []);
 
+  const setSource = useCallback((next: MetricsSource) => {
+    setQueryParams({ data: next === "live" ? "live" : "prototype" });
+  }, []);
+
   const openProject = useCallback((slug: string) => {
     setQueryParams({ project: slug }, "push", { [SHEET_STATE_KEY]: true });
   }, []);
@@ -107,8 +122,8 @@ export function LeaderboardApp({ initial, refreshSeconds }: { initial: Leaderboa
 
   return (
     <MotionConfig reducedMotion="user">
-      <Hero data={data} reconnecting={reconnecting} />
-      <div className="pb-24">
+      <Hero data={data} reconnecting={reconnecting} source={source} onSourceChange={setSource} />
+      <div aria-busy={switching} className={cn("pb-24 transition-opacity duration-300", switching && "pointer-events-none opacity-40")}>
         <Standings
           entries={filtered}
           totalCount={ranked.length}
@@ -139,6 +154,10 @@ export function LeaderboardApp({ initial, refreshSeconds }: { initial: Leaderboa
 
 /** Decides how a polled snapshot updates state. */
 function reconcile(prev: RaceState, next: Leaderboard): RaceState {
+  // Switched between Prototype and Live: start over, no rank movement.
+  if (next.source !== prev.data.source) {
+    return { data: next, movement: { revenue: {}, users: {} }, changed: {}, tick: prev.tick + 1 };
+  }
   const prevTime = Date.parse(prev.data.updatedAt);
   const nextTime = Date.parse(next.updatedAt);
   // A stale cache or CDN edge can hand back an older snapshot — ignore it.

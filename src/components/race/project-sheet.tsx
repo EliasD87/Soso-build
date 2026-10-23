@@ -156,7 +156,7 @@ function SheetBody({
           <p className="mt-8 border-y border-line py-5 text-sm text-muted">
             {unavailable
               ? "Live data is temporarily unavailable."
-              : project.builderId
+              : project.builderAddress
                 ? "No builder fee activity yet."
                 : "No live data yet — no SoDEX builder code registered."}
           </p>

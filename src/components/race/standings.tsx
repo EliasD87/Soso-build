@@ -289,7 +289,7 @@ function Row({
   onToggle: (slug: string) => void;
 }) {
   const { project, metrics, rank } = entry;
-  const missing = unavailable ? "Unavailable" : project.builderId ? "No data" : "Awaiting code";
+  const missing = unavailable ? "Unavailable" : project.builderAddress ? "No data" : "Awaiting code";
   const open = () => onSelect(project.slug);
   const activate = () => (phone ? onToggle(project.slug) : open());
   const panelId = `row-${project.slug}`;

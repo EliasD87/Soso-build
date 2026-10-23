@@ -1,21 +1,25 @@
 import { cacheLife } from "next/cache";
 import { projects } from "@/data/projects";
-import { getLiveMetrics, isLiveConfigured } from "./metrics/builder-codes";
+import { getLiveMetrics } from "./metrics/builder-codes";
 import { getPreviewMetrics } from "./metrics/preview";
-import type { MetricsSnapshot } from "./metrics/types";
+import type { MetricsSnapshot, MetricsSource } from "./metrics/types";
 import { buildLeaderboard, type Leaderboard } from "./ranking";
 
 /** How often (seconds) the server refreshes metrics and clients poll. */
 export const REFRESH_SECONDS = 30;
 
 /**
- * METRICS_MODE: "live" | "preview" | "auto" (default).
- * "auto" uses the Builder Codes API when BUILDER_CODES_API_URL is set.
+ * Source shown on first load: METRICS_MODE "live" | "preview" (default).
+ * Visitors can switch with the Prototype / Live toggle (`?data=`).
  */
-function mode() {
-  const value = process.env.METRICS_MODE?.toLowerCase();
-  if (value === "live" || value === "preview") return value;
-  return isLiveConfigured() ? "live" : "preview";
+export function defaultSource(): MetricsSource {
+  return process.env.METRICS_MODE?.toLowerCase() === "live" ? "live" : "preview";
+}
+
+export function parseSource(value: string | null | undefined): MetricsSource | null {
+  if (value === "live") return "live";
+  if (value === "preview" || value === "prototype") return "preview";
+  return null;
 }
 
 /*
@@ -55,6 +59,6 @@ async function liveLeaderboard(): Promise<Leaderboard> {
   }
 }
 
-export async function getLeaderboard(): Promise<Leaderboard> {
-  return mode() === "live" ? liveLeaderboard() : previewLeaderboard();
+export async function getLeaderboard(source: MetricsSource = defaultSource()): Promise<Leaderboard> {
+  return source === "live" ? liveLeaderboard() : previewLeaderboard();
 }
